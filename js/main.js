@@ -1,6 +1,7 @@
 import { loadPosts, formatDate } from './data.js';
 
 const el = document.getElementById('timeline');
+const filterBar = document.getElementById('filter-bar');
 
 function cardHTML(post) {
   return `
@@ -20,9 +21,20 @@ function escapeHTML(str) {
 }
 
 async function render() {
-  const posts = await loadPosts();
+  const tag = new URLSearchParams(location.search).get('tag');
+  let posts = await loadPosts();
+
+  if (tag) {
+    posts = posts.filter((p) => (p.tags || []).some((t) => t.toLowerCase() === tag.toLowerCase()));
+    filterBar.innerHTML = `<div class="filter-bar">Tagged <strong>${escapeHTML(tag)}</strong> &middot; <a href="index.html">Clear</a></div>`;
+  } else {
+    filterBar.innerHTML = '';
+  }
+
   if (posts.length === 0) {
-    el.innerHTML = `<div class="empty-state">No walks logged yet.<br>Head to Admin to add your first post.</div>`;
+    el.innerHTML = tag
+      ? `<div class="empty-state">No posts tagged "${escapeHTML(tag)}".</div>`
+      : `<div class="empty-state">No walks logged yet.<br>Head to Admin to add your first post.</div>`;
     return;
   }
   el.innerHTML = posts.map(cardHTML).join('');

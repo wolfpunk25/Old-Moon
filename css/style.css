@@ -87,6 +87,20 @@ main {
   overflow: hidden;
 }
 
+.filter-bar {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.25rem;
+}
+
+.filter-bar strong {
+  color: var(--ink);
+}
+
+.filter-bar a {
+  color: var(--accent);
+}
+
 .post-card img {
   width: 100%;
   aspect-ratio: 4 / 3;

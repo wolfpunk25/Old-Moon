@@ -20,7 +20,7 @@ async function render() {
   }
 
   const tagsHTML = (post.tags || [])
-    .map((t) => `<span class="tag">${escapeHTML(t)}</span>`)
+    .map((t) => `<a class="tag" href="index.html?tag=${encodeURIComponent(t)}">${escapeHTML(t)}</a>`)
     .join('');
 
   el.innerHTML = `
