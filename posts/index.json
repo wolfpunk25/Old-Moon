@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "20260719-113400-jpuq3v",
+    "image": "images/20260719-113400-jpuq3v.jpg",
+    "caption": "Lincoln 1940s weekend",
+    "tags": [
+      "Lincoln",
+      "1940s"
+    ],
+    "captureDate": "2026-07-19T11:34:00",
+    "location": {
+      "lat": 53.235256,
+      "lng": -0.5413
+    }
+  }
+]
