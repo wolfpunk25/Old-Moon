@@ -8,8 +8,22 @@
   --ink-soft: #a7acbd;
   --accent: #d8c8a4;
   --danger: #d9756b;
+  --ok: #8fbf8f;
+  --header-bg: rgba(18, 20, 28, 0.85);
   --radius: 14px;
   --max-width: 640px;
+}
+
+:root[data-theme="light"] {
+  --bg: #f6f4ef;
+  --bg-elevated: #ffffff;
+  --border: #e3ddd0;
+  --ink: #221f1a;
+  --ink-soft: #6d675c;
+  --accent: #96702c;
+  --danger: #b23b30;
+  --ok: #3f8f4f;
+  --header-bg: rgba(246, 244, 239, 0.85);
 }
 
 * { box-sizing: border-box; }
@@ -43,18 +57,40 @@ header.site-header {
   align-items: center;
   justify-content: space-between;
   padding: 1.1rem 1.25rem;
-  background: rgba(18, 20, 28, 0.85);
+  background: var(--header-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.moon-toggle {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 0.4rem;
+  margin: -0.4rem 0;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.moon-toggle:active {
+  background: var(--border);
+}
+
+.site-title {
+  display: flex;
+  align-items: center;
 }
 
 header.site-header h1 {
   font-size: 1.4rem;
   letter-spacing: 0.02em;
-}
-
-header.site-header h1::before {
-  content: '\1F311  ';
 }
 
 .icon-link {
@@ -77,6 +113,18 @@ main {
   flex-direction: column;
   gap: 1.75rem;
   margin-top: 0.5rem;
+}
+
+.month-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  margin: 0.25rem 0 -0.75rem;
+}
+
+.month-heading:first-child {
+  margin-top: 0;
 }
 
 .post-card {
@@ -298,7 +346,7 @@ button:disabled {
 }
 
 .status.error { color: var(--danger); }
-.status.ok { color: #8fbf8f; }
+.status.ok { color: var(--ok); }
 
 .hint {
   font-size: 0.8rem;
@@ -320,3 +368,17 @@ button:disabled {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.site-footer {
+  max-width: var(--max-width);
+  margin: 3rem auto 0;
+  padding: 1.5rem 1rem 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--border);
+}
+
+.site-footer a {
+  color: var(--accent);
+}

@@ -30,7 +30,8 @@ const formTitle = document.getElementById('form-title');
 const adminList = document.getElementById('admin-list');
 
 let editingId = null;
-let pendingImageBlob = null; // compressed JPEG blob for the currently selected file, if any
+let pendingImageBlob = null; // compressed full-size JPEG blob for the currently selected file, if any
+let pendingThumbBlob = null; // smaller JPEG blob used on the timeline
 
 init();
 
@@ -93,7 +94,10 @@ imageInput.addEventListener('change', async () => {
   submitBtn.disabled = true;
 
   try {
-    pendingImageBlob = await compressImage(file, 2000, 0.85);
+    [pendingImageBlob, pendingThumbBlob] = await Promise.all([
+      compressImage(file, 2000, 0.85),
+      compressImage(file, 800, 0.75),
+    ]);
   } catch (err) {
     exifHint.textContent = `Could not read that photo: ${err.message}`;
     submitBtn.disabled = false;
@@ -214,9 +218,16 @@ form.addEventListener('submit', async (e) => {
       if (!post) throw new Error('Post no longer exists');
 
       if (pendingImageBlob) {
-        const base64 = await blobToBase64(pendingImageBlob);
-        const imageSha = await getSha(post.image);
-        await putBinaryFile(post.image, base64, imageSha, `Update photo for ${editingId}`);
+        const thumbPath = post.thumb || `${IMAGES_PATH}/${post.id}-thumb.jpg`;
+        const [base64Full, base64Thumb, imageSha, thumbSha] = await Promise.all([
+          blobToBase64(pendingImageBlob),
+          blobToBase64(pendingThumbBlob),
+          getSha(post.image),
+          getSha(thumbPath),
+        ]);
+        await putBinaryFile(post.image, base64Full, imageSha, `Update photo for ${editingId}`);
+        await putBinaryFile(thumbPath, base64Thumb, thumbSha, `Update thumbnail for ${editingId}`);
+        post.thumb = thumbPath;
       }
 
       post.caption = caption;
@@ -231,10 +242,15 @@ form.addEventListener('submit', async (e) => {
       const captureDate = new Date(captureISO);
       const id = makeId(isNaN(captureDate) ? new Date() : captureDate);
       const imagePath = `${IMAGES_PATH}/${id}.jpg`;
-      const base64 = await blobToBase64(pendingImageBlob);
-      await putBinaryFile(imagePath, base64, null, `Add photo for ${id}`);
+      const thumbPath = `${IMAGES_PATH}/${id}-thumb.jpg`;
+      const [base64Full, base64Thumb] = await Promise.all([
+        blobToBase64(pendingImageBlob),
+        blobToBase64(pendingThumbBlob),
+      ]);
+      await putBinaryFile(imagePath, base64Full, null, `Add photo for ${id}`);
+      await putBinaryFile(thumbPath, base64Thumb, null, `Add thumbnail for ${id}`);
 
-      posts.push({ id, image: imagePath, caption, tags, captureDate: captureISO, location });
+      posts.push({ id, image: imagePath, thumb: thumbPath, caption, tags, captureDate: captureISO, location });
       await saveManifest(posts, manifestSha, `Add post ${id}`);
     }
 
@@ -251,6 +267,7 @@ form.addEventListener('submit', async (e) => {
 function resetForm() {
   editingId = null;
   pendingImageBlob = null;
+  pendingThumbBlob = null;
   form.reset();
   exifHint.textContent = '';
   formTitle.textContent = 'New post';
@@ -287,7 +304,7 @@ async function refreshList() {
     .map(
       (p) => `
       <div class="admin-post-row" data-id="${escapeHTML(p.id)}">
-        <img src="${p.image}" alt="">
+        <img src="${p.thumb || p.image}" alt="">
         <div class="info">
           <div class="caption">${escapeHTML(p.caption || '(no caption)')}</div>
           <div class="date">${escapeHTML(p.captureDate || '')}</div>
@@ -319,6 +336,7 @@ function startEdit(post) {
   if (!post) return;
   editingId = post.id;
   pendingImageBlob = null;
+  pendingThumbBlob = null;
   imageInput.value = '';
   captionInput.value = post.caption || '';
   tagsInput.value = (post.tags || []).join(', ');
@@ -344,6 +362,11 @@ async function handleDelete(post) {
 
     const imageSha = await getSha(post.image);
     if (imageSha) await deleteFile(post.image, imageSha, `Delete photo for ${post.id}`);
+
+    if (post.thumb) {
+      const thumbSha = await getSha(post.thumb);
+      if (thumbSha) await deleteFile(post.thumb, thumbSha, `Delete thumbnail for ${post.id}`);
+    }
 
     if (editingId === post.id) resetForm();
     setStatus(formStatus, 'Deleted.', 'ok');

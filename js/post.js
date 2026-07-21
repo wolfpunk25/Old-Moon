@@ -24,7 +24,7 @@ async function render() {
     .join('');
 
   el.innerHTML = `
-    <img class="hero" src="${post.image}" alt="">
+    <img class="hero" src="${post.image}" alt="${escapeHTML(post.caption || '')}">
     <div class="post-meta">${formatDate(post.captureDate)} &middot; ${formatTime(post.captureDate)}</div>
     <div class="post-caption">${escapeHTML(post.caption || '')}</div>
     ${tagsHTML ? `<div class="tags">${tagsHTML}</div>` : ''}
