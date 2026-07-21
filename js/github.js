@@ -61,11 +61,11 @@ export async function getSha(path) {
   return json.sha;
 }
 
-// Fetches the manifest without auth so read-only visitors don't need a token.
+// Fetches the manifest relative to the page it's called from, via the Pages
+// CDN — no auth needed, and it keeps working regardless of repo visibility
+// (unlike raw.githubusercontent.com, which 403s once a repo goes private).
 export async function getPublicFile(path) {
-  const res = await fetch(
-    `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${REPO_BRANCH}/${path}?t=${Date.now()}`
-  );
+  const res = await fetch(`${path}?t=${Date.now()}`);
   if (!res.ok) return null;
   return res.text();
 }
