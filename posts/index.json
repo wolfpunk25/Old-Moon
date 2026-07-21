@@ -38,5 +38,19 @@
       "lat": 51.502328,
       "lng": -0.077453
     }
+  },
+  {
+    "id": "20260719-113600-iap28g",
+    "image": "images/20260719-113600-iap28g.jpg",
+    "thumb": "images/20260719-113600-iap28g-thumb.jpg",
+    "caption": "Back gardens, Lincoln Castle",
+    "tags": [
+      "Lincoln"
+    ],
+    "captureDate": "2026-07-19T11:36:00",
+    "location": {
+      "lat": 53.235628,
+      "lng": -0.542422
+    }
   }
 ]
