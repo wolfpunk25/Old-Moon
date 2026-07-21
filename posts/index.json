@@ -12,5 +12,31 @@
       "lat": 53.235256,
       "lng": -0.5413
     }
+  },
+  {
+    "id": "20260615-130000-nbvw31",
+    "image": "images/20260615-130000-nbvw31.jpg",
+    "caption": "Thin house",
+    "tags": [
+      "London"
+    ],
+    "captureDate": "2026-06-15T13:00:00",
+    "location": {
+      "lat": 51.519275,
+      "lng": -0.102894
+    }
+  },
+  {
+    "id": "20260411-201000-nc707l",
+    "image": "images/20260411-201000-nc707l.jpg",
+    "caption": "Ghost Face visits Wetherspoons",
+    "tags": [
+      "London"
+    ],
+    "captureDate": "2026-04-11T20:10:00",
+    "location": {
+      "lat": 51.502328,
+      "lng": -0.077453
+    }
   }
 ]
