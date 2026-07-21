@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Old Moon — Admin</title>
 <link rel="stylesheet" href="css/style.css">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12141c">
+
+<!-- iOS home screen support -->
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Old Moon">
+
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
 </head>
 <body>
 <header class="site-header">
@@ -28,6 +39,10 @@
       <button class="primary" id="login-btn">Save &amp; log in</button>
     </div>
     <div id="login-status" class="status"></div>
+    <p class="hint">
+      You only need to do this once per device — the token stays saved in this app
+      until you tap "Log out".
+    </p>
   </section>
 
   <section id="admin-view" hidden>
